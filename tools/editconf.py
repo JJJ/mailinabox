@@ -24,7 +24,7 @@
 # lines while the lines start with whitespace, e.g.:
 #
 # NAME VAL
-#   UE 
+#   UE
 
 import sys, re
 
@@ -76,7 +76,7 @@ for setting in settings:
 
 found = set()
 buf = ""
-with open(filename, "r") as f:
+with open(filename, encoding="utf-8") as f:
         input_lines = list(f)
 
 while len(input_lines) > 0:
@@ -84,7 +84,7 @@ while len(input_lines) > 0:
 
 	# If this configuration file uses folded lines, append any folded lines
 	# into our input buffer.
-	if folded_lines and line[0] not in (comment_char, " ", ""):
+	if folded_lines and line[0] not in {comment_char, " ", ""}:
 		while len(input_lines) > 0 and input_lines[0][0] in " \t":
 			line += input_lines.pop(0)
 
@@ -93,9 +93,9 @@ while len(input_lines) > 0:
 		# Check if this line contain this setting from the command-line arguments.
 		name, val = settings[i].split("=", 1)
 		m = re.match(
-			   "(\s*)"
-			 + "(" + re.escape(comment_char) + "\s*)?"
-			 + re.escape(name) + delimiter_re + "(.*?)\s*$",
+			   r"(\s*)"
+			 "(" + re.escape(comment_char) + r"\s*)?"
+			 + re.escape(name) + delimiter_re + r"(.*?)\s*$",
 			 line, re.S)
 		if not m: continue
 		indent, is_comment, existing_val = m.groups()
@@ -144,7 +144,7 @@ for i in range(len(settings)):
 
 if not testing:
 	# Write out the new file.
-	with open(filename, "w") as f:
+	with open(filename, "w", encoding="utf-8") as f:
 		f.write(buf)
 else:
 	# Just print the new file to stdout.
